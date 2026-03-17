@@ -66,6 +66,7 @@ targets:
       - path: Tests/FastMarkdownPreviewTests
         type: group
       - path: Sources/FastMarkdownPreview/MarkdownRenderer.swift
+      - path: Sources/FastMarkdownPreview/FileWatcher.swift
     settings:
       base:
         SWIFT_OBJC_BRIDGING_HEADER: Sources/FastMarkdownPreview/FastMarkdownPreview-Bridging-Header.h
