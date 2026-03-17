@@ -2,10 +2,6 @@ import Foundation
 import AppKit
 
 // Temporary stubs — will be replaced by real implementations
-class PanelController {
-    init() {}
-    func open(fileAt url: URL) {}
-}
 
 class HotkeyManager {
     init(onFire: @escaping () -> Void) {}
