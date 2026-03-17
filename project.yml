@@ -1,0 +1,72 @@
+name: FastMarkdownPreview
+options:
+  bundleIdPrefix: com.anshu
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    PRODUCT_NAME: FastMarkdownPreview
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    SWIFT_VERSION: "5.9"
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Manual
+    SWIFT_OBJC_BRIDGING_HEADER: Sources/FastMarkdownPreview/FastMarkdownPreview-Bridging-Header.h
+    HEADER_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/include
+    LIBRARY_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/lib
+    OTHER_LDFLAGS: "-lcmark-gfm -lcmark-gfm-extensions"
+
+targets:
+  FastMarkdownPreview:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/FastMarkdownPreview
+        type: group
+    resources:
+      - path: Resources
+        type: folder
+    info:
+      path: Sources/FastMarkdownPreview/Info.plist
+      properties:
+        CFBundleName: Fast Markdown Preview
+        CFBundleDisplayName: Fast Markdown Preview
+        CFBundleIdentifier: com.anshu.FastMarkdownPreview
+        CFBundleVersion: "1"
+        CFBundleShortVersionString: "1.0"
+        LSUIElement: true
+        NSHighResolutionCapable: true
+        NSAppleEventsUsageDescription: "Used to read the selected file in Finder."
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Markdown File
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Default
+            LSItemContentTypes:
+              - net.daringfireball.markdown
+              - public.markdown
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: net.daringfireball.markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeDescription: Markdown Document
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - md
+                - markdown
+
+  FastMarkdownPreviewTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/FastMarkdownPreviewTests
+        type: group
+    dependencies:
+      - target: FastMarkdownPreview
+    settings:
+      base:
+        HEADER_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/include
+        LIBRARY_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/lib
+        OTHER_LDFLAGS: "-lcmark-gfm -lcmark-gfm-extensions"
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/FastMarkdownPreview/FastMarkdownPreview-Bridging-Header.h
