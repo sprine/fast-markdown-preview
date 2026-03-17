@@ -1,0 +1,56 @@
+:root {
+  color-scheme: light dark;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: -apple-system-label;
+  background: -apple-system-control-background;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.2em; }
+h1, h2, h3 { font-weight: 700; margin-top: 20px; margin-bottom: 10px; }
+a { color: -apple-system-blue; }
+code {
+  font-family: "SF Mono", ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+@media (prefers-color-scheme: dark) {
+  code { background: rgba(255,255,255,0.1); }
+}
+pre {
+  background: rgba(0,0,0,0.05);
+  border-radius: 8px;
+  padding: 12px;
+  overflow: auto;
+}
+@media (prefers-color-scheme: dark) {
+  pre { background: rgba(255,255,255,0.07); }
+}
+pre code { background: transparent; padding: 0; }
+blockquote { border-left: 3px solid rgba(0,0,0,0.2); padding-left: 12px; margin-left: 0; color: rgba(0,0,0,0.6); }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 6px 12px; border: 1px solid rgba(0,0,0,0.15); }
+img { max-width: 100%; }
+#file-gone-banner {
+  display: none;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #664d03;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+@media (prefers-color-scheme: dark) {
+  #file-gone-banner { background: #332701; border-color: #9a6700; color: #e3b341; }
+}
