@@ -3,10 +3,6 @@ import AppKit
 
 // Temporary stubs — will be replaced by real implementations
 
-class HotkeyManager {
-    init(onFire: @escaping () -> Void) {}
-}
-
 class SettingsViewController: NSViewController {
     weak var hotkeyManager: HotkeyManager?
     weak var panelController: PanelController?

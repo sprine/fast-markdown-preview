@@ -57,6 +57,9 @@ targets:
         HEADER_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/include
         LIBRARY_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/lib
         OTHER_LDFLAGS: "-lcmark-gfm -lcmark-gfm-extensions"
+    dependencies:
+      - framework: Carbon.framework
+        embed: false
 
   FastMarkdownPreviewTests:
     type: bundle.unit-test
