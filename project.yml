@@ -8,15 +8,10 @@ options:
 
 settings:
   base:
-    PRODUCT_NAME: FastMarkdownPreview
     MACOSX_DEPLOYMENT_TARGET: "14.0"
     SWIFT_VERSION: "5.9"
     CODE_SIGN_IDENTITY: "-"
     CODE_SIGN_STYLE: Manual
-    SWIFT_OBJC_BRIDGING_HEADER: Sources/FastMarkdownPreview/FastMarkdownPreview-Bridging-Header.h
-    HEADER_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/include
-    LIBRARY_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/lib
-    OTHER_LDFLAGS: "-lcmark-gfm -lcmark-gfm-extensions"
 
 targets:
   FastMarkdownPreview:
@@ -55,18 +50,36 @@ targets:
               public.filename-extension:
                 - md
                 - markdown
+    settings:
+      base:
+        PRODUCT_NAME: FastMarkdownPreview
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/FastMarkdownPreview/FastMarkdownPreview-Bridging-Header.h
+        HEADER_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/include
+        LIBRARY_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/lib
+        OTHER_LDFLAGS: "-lcmark-gfm -lcmark-gfm-extensions"
 
   FastMarkdownPreviewTests:
     type: bundle.unit-test
     platform: macOS
+    # Include test sources AND the app sources under test directly
     sources:
       - path: Tests/FastMarkdownPreviewTests
         type: group
-    dependencies:
-      - target: FastMarkdownPreview
+      - path: Sources/FastMarkdownPreview/MarkdownRenderer.swift
     settings:
       base:
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/FastMarkdownPreview/FastMarkdownPreview-Bridging-Header.h
         HEADER_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/include
         LIBRARY_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/lib
         OTHER_LDFLAGS: "-lcmark-gfm -lcmark-gfm-extensions"
-        SWIFT_OBJC_BRIDGING_HEADER: Sources/FastMarkdownPreview/FastMarkdownPreview-Bridging-Header.h
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: ""
+
+schemes:
+  FastMarkdownPreview:
+    build:
+      targets:
+        FastMarkdownPreview: all
+    test:
+      targets:
+        - FastMarkdownPreviewTests
