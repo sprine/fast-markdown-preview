@@ -8,15 +8,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         panelController = PanelController()
-
-        // Intercept kAEOpenDocuments before NSDocumentController can handle it.
-        // This prevents the "cannot open files" error for non-document-based apps.
-        NSAppleEventManager.shared().setEventHandler(
-            self,
-            andSelector: #selector(handleOpenDocuments(_:withReply:)),
-            forEventClass: AEEventClass(kCoreEventClass),
-            andEventID: AEEventID(kAEOpenDocuments)
-        )
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -25,17 +16,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self?.handleHotkey()
         }
         setupPopover()
-    }
-
-    @objc private func handleOpenDocuments(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
-        guard let listDesc = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) else { return }
-        for i in 1...listDesc.numberOfItems {
-            guard let itemDesc = listDesc.atIndex(i),
-                  let urlString = itemDesc.stringValue,
-                  let url = URL(string: urlString),
-                  ["md", "markdown"].contains(url.pathExtension.lowercased()) else { continue }
-            panelController.open(fileAt: url)
-        }
     }
 
     private func setupMenuBar() {

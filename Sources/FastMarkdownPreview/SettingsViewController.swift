@@ -22,7 +22,7 @@ final class SettingsViewController: NSViewController {
     private func buildUI() {
         let stack = NSStackView()
         stack.orientation = .vertical
-        stack.alignment = .fill
+        stack.alignment = .width
         stack.spacing = 0
         stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
