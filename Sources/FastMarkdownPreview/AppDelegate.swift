@@ -6,10 +6,16 @@ class DocumentController: NSDocumentController {
     override func openDocument(withContentsOf url: URL,
                                display displayDocument: Bool,
                                completionHandler: @escaping (NSDocument?, Bool, (any Error)?) -> Void) {
+        NSLog("[FMP] DocumentController.openDocument called for: %@", url.path)
         if let delegate = NSApp.delegate as? AppDelegate {
             delegate.panelController.open(fileAt: url)
         }
         completionHandler(nil, false, nil)
+    }
+
+    override func documentClass(forType typeName: String) -> AnyClass? {
+        NSLog("[FMP] documentClass(forType: %@) → nil", typeName)
+        return nil
     }
 }
 
@@ -19,13 +25,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private(set) var panelController: PanelController!
     private var hotkeyManager: HotkeyManager!
 
-    func applicationWillFinishLaunching(_ notification: Notification) {
-        panelController = PanelController()
-        // Must be installed before any file-open events arrive
-        _ = DocumentController()
-    }
-
     func applicationDidFinishLaunching(_ notification: Notification) {
+        panelController = PanelController()
         setupMenuBar()
         hotkeyManager = HotkeyManager { [weak self] in
             self?.handleHotkey()
