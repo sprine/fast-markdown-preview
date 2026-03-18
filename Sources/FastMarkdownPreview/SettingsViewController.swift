@@ -99,9 +99,9 @@ final class SettingsViewController: NSViewController {
             quitWrapper.centerXAnchor.constraint(equalTo: quitContainer.centerXAnchor),
             quitWrapper.topAnchor.constraint(equalTo: quitContainer.topAnchor, constant: 4),
             quitWrapper.bottomAnchor.constraint(equalTo: quitContainer.bottomAnchor),
-            quitContainer.widthAnchor.constraint(equalTo: stack.widthAnchor),
         ])
         stack.addArrangedSubview(quitContainer)
+        quitContainer.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
     }
 
     // MARK: - Layout Helpers
