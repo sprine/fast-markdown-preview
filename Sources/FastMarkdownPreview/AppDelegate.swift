@@ -8,6 +8,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var hotkeyManager: HotkeyManager!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        NSLog("[FMP] applicationDidFinishLaunching fired")
         setupMenuBar()
         panelController = PanelController()
         hotkeyManager = HotkeyManager { [weak self] in
@@ -19,9 +20,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupMenuBar() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         let button = statusItem.button!
-        button.image = NSImage(systemSymbolName: "doc.richtext",
-                               accessibilityDescription: "Markdown Preview")
-        button.image?.isTemplate = true
+        if let img = NSImage(systemSymbolName: "doc.richtext",
+                             accessibilityDescription: "Markdown Preview") {
+            img.isTemplate = true
+            button.image = img
+        } else {
+            // SF Symbol unavailable – fall back to text
+            button.title = "MD"
+        }
         button.action = #selector(togglePopover(_:))
         button.target = self
     }
