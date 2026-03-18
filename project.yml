@@ -63,6 +63,45 @@ targets:
     dependencies:
       - framework: Carbon.framework
         embed: false
+      - target: QLExtension
+
+  QLExtension:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Sources/QLExtension
+        type: group
+      - path: Sources/FastMarkdownPreview/MarkdownRenderer.swift
+      - path: Sources/FastMarkdownPreview/HTMLTemplate.swift
+      - path: Resources
+        buildPhase: resources
+        excludes:
+          - .gitkeep
+    info:
+      path: Sources/QLExtension/Info.plist
+      properties:
+        CFBundleName: QLExtension
+        CFBundleDisplayName: Fast Markdown Preview QuickLook
+        CFBundleIdentifier: com.anshu.FastMarkdownPreview.QLExtension
+        CFBundleVersion: "1"
+        CFBundleShortVersionString: "1.0"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewViewController
+          NSExtensionAttributes:
+            QLSupportedContentTypes:
+              - net.daringfireball.markdown
+              - public.markdown
+            QLSupportsSearchableItems: false
+    settings:
+      base:
+        PRODUCT_NAME: QLExtension
+        SKIP_INSTALL: "YES"
+        CODE_SIGN_ENTITLEMENTS: Sources/QLExtension/QLExtension.entitlements
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/QLExtension/QLExtension-Bridging-Header.h
+        HEADER_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/include
+        LIBRARY_SEARCH_PATHS: $(PROJECT_DIR)/Libs/cmark-gfm/lib
+        OTHER_LDFLAGS: "-lcmark-gfm -lcmark-gfm-extensions"
 
   FastMarkdownPreviewTests:
     type: bundle.unit-test
@@ -87,6 +126,7 @@ schemes:
     build:
       targets:
         FastMarkdownPreview: all
+        QLExtension: all
     test:
       targets:
         - FastMarkdownPreviewTests
