@@ -16,7 +16,14 @@ final class PreviewViewController: NSViewController, QLPreviewingController {
             let markdown = try String(contentsOf: url, encoding: .utf8)
             let htmlBody = renderer.renderHTML(from: markdown)
             let fullHTML = HTMLTemplate.wrap(htmlBody: htmlBody, theme: .github)
-            webView.loadHTMLString(fullHTML, baseURL: nil)
+
+            // loadHTMLString silently fails in sandboxed extensions —
+            // write to a temp file and load via file URL instead.
+            let tempURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent(UUID().uuidString)
+                .appendingPathExtension("html")
+            try fullHTML.write(to: tempURL, atomically: true, encoding: .utf8)
+            webView.loadFileURL(tempURL, allowingReadAccessTo: tempURL.deletingLastPathComponent())
             handler(nil)
         } catch {
             handler(error)
