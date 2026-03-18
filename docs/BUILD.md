@@ -12,69 +12,57 @@ Native macOS menu bar app for previewing GitHub-Flavored Markdown files.
 ## Quick Start
 
 ```bash
-# Clone the repo
 git clone <repo-url>
 cd fast-markdown-preview
 
-# Build and install
-./scripts/build.sh --release --install
-
-# Launch
-open ~/Applications/FastMarkdownPreview.app
+# Build, install to ~/Applications, and launch
+./scripts/build.sh
 ```
+
+That's it. The app appears as a **menu bar icon** (top-right of screen) — there is no Dock icon.
 
 ## Build Script
 
-The `scripts/build.sh` script handles project generation, building, testing, and installation.
-
 ```
-Usage: ./scripts/build.sh [--release] [--install] [--test]
+Usage: ./scripts/build.sh [--debug] [--test] [--no-install] [--xcode]
+
+Default: builds Release, installs to ~/Applications, launches the app.
 
 Options:
-  --release   Build Release configuration (default: Debug)
-  --install   Copy .app to ~/Applications after building
-  --test      Run unit tests instead of building
+  --debug        Build Debug instead of Release
+  --test         Run unit tests only
+  --no-install   Build without installing or launching
+  --xcode        Generate project and open in Xcode (no build)
 ```
 
 ### Examples
 
 ```bash
-# Debug build (for development)
+# Default: build + install + launch
 ./scripts/build.sh
 
 # Run tests
 ./scripts/build.sh --test
 
-# Release build + install to ~/Applications
-./scripts/build.sh --release --install
+# Open in Xcode for development
+./scripts/build.sh --xcode
 ```
 
-## Manual Build Steps
+## Building with Xcode
 
-If you prefer not to use the script:
+If you prefer using Xcode's GUI:
 
 ```bash
-# 1. Install xcodegen
-brew install xcodegen
-
-# 2. Generate Xcode project
-xcodegen generate --spec project.yml --project .
-
-# 3. Build
-xcodebuild \
-  -project FastMarkdownPreview.xcodeproj \
-  -scheme FastMarkdownPreview \
-  -configuration Release \
-  -archivePath build/FastMarkdownPreview.xcarchive \
-  archive \
-  CODE_SIGN_IDENTITY="-" \
-  CODE_SIGNING_REQUIRED=NO \
-  ARCHS=arm64 ONLY_ACTIVE_ARCH=YES
-
-# 4. Copy to Applications
-cp -R build/FastMarkdownPreview.xcarchive/Products/Applications/FastMarkdownPreview.app \
-  ~/Applications/
+# One-time: generate the Xcode project and open it
+./scripts/build.sh --xcode
 ```
+
+Then in Xcode:
+1. Select the **FastMarkdownPreview** scheme (top toolbar)
+2. Set destination to **My Mac**
+3. Press **Cmd+R** to build and run
+
+The `.xcodeproj` is generated from `project.yml` and gitignored. You need to re-run `./scripts/build.sh --xcode` (or `xcodegen generate`) after pulling changes that modify `project.yml`.
 
 ## Project Structure
 
@@ -108,9 +96,10 @@ fast-markdown-preview/
 
 ## Notes
 
-- **No Xcode project in git.** The `.xcodeproj` is generated from `project.yml` by xcodegen and is gitignored. Always run `xcodegen generate` (or use the build script) before opening in Xcode.
-- **arm64 only.** The vendored cmark-gfm static libraries are compiled for Apple Silicon. Building for x86_64 (Intel) requires recompiling cmark-gfm from source — see below.
-- **Ad-hoc signed.** The app uses `CODE_SIGN_IDENTITY="-"` (ad-hoc signing). It runs fine locally but won't pass Gatekeeper on other machines without proper code signing.
+- **No Xcode project in git.** The `.xcodeproj` is generated from `project.yml` by xcodegen and is gitignored. Run `./scripts/build.sh --xcode` or `xcodegen generate` to create it.
+- **Menu bar only.** The app uses `LSUIElement = true` so it has no Dock icon. Look for the document icon in the menu bar (top-right).
+- **arm64 only.** The vendored cmark-gfm static libraries are compiled for Apple Silicon. See below for Intel.
+- **Ad-hoc signed.** The build script clears the quarantine attribute automatically. If macOS still blocks the app, run: `xattr -cr ~/Applications/FastMarkdownPreview.app`
 - **No sandbox.** The app uses NSAppleScript for Finder integration, which requires no sandbox.
 
 ## Building for Intel (x86_64)
@@ -126,9 +115,6 @@ cp -R $(brew --prefix cmark-gfm)/include/* Libs/cmark-gfm/include/
 # Copy libraries
 cp $(brew --prefix cmark-gfm)/lib/libcmark-gfm.a Libs/cmark-gfm/lib/
 cp $(brew --prefix cmark-gfm)/lib/libcmark-gfm-extensions.a Libs/cmark-gfm/lib/
-
-# Then build without ARCHS restriction
-./scripts/build.sh --release --install
 ```
 
-Remove the `ARCHS=arm64` and `ONLY_ACTIVE_ARCH=YES` flags from the script if building universal or x86_64.
+Then edit `scripts/build.sh` and remove the `ARCHS=arm64` and `ONLY_ACTIVE_ARCH=YES` flags.
