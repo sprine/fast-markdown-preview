@@ -21,9 +21,10 @@ targets:
     sources:
       - path: Sources/FastMarkdownPreview
         type: group
-    resources:
       - path: Resources
-        type: folder
+        buildPhase: resources
+        excludes:
+          - .gitkeep
     info:
       path: Sources/FastMarkdownPreview/Info.plist
       properties:

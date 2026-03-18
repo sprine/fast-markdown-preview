@@ -9,7 +9,7 @@ final class SettingsViewController: NSViewController {
     private var defaultViewerButton: NSButton!
 
     override func loadView() {
-        view = NSView(frame: NSRect(x: 0, y: 0, width: 280, height: 200))
+        view = NSView(frame: NSRect(x: 0, y: 0, width: 260, height: 0))
     }
 
     override func viewDidLoad() {
@@ -17,67 +17,154 @@ final class SettingsViewController: NSViewController {
         buildUI()
     }
 
+    // MARK: - UI Construction
+
     private func buildUI() {
         let stack = NSStackView()
         stack.orientation = .vertical
         stack.alignment = .leading
-        stack.spacing = 12
-        stack.edgeInsets = NSEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        stack.spacing = 0
         stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
         NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: view.topAnchor),
-            stack.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stack.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
+            stack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12),
             stack.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
-        // Hotkey row
-        let hotkeyRow = makeRow(label: "Hotkey:")
-        hotkeyLabel = NSTextField(labelWithString: hotkeyManager?.displayString ?? "\u{2325}\u{2318}P")
-        hotkeyLabel.font = .monospacedSystemFont(ofSize: 13, weight: .medium)
-        hotkeyRow.addArrangedSubview(hotkeyLabel)
-        let recordBtn = NSButton(title: "Record\u{2026}", target: self, action: #selector(recordHotkey))
-        recordBtn.bezelStyle = .rounded
-        hotkeyRow.addArrangedSubview(recordBtn)
-        stack.addArrangedSubview(hotkeyRow)
+        // -- Appearance section --
+        stack.addArrangedSubview(makeSectionHeader("Appearance"))
+        stack.setCustomSpacing(6, after: stack.arrangedSubviews.last!)
 
-        // Theme row
-        let themeRow = makeRow(label: "Theme:")
+        let themeRow = makeFormRow(label: "Theme")
         themeSegment = NSSegmentedControl(labels: ["GitHub", "System"],
                                           trackingMode: .selectOne,
                                           target: self,
                                           action: #selector(themeChanged))
+        themeSegment.segmentStyle = .automatic
         let savedTheme = UserDefaults.standard.string(forKey: "cssTheme") ?? CSSTheme.github.rawValue
         themeSegment.selectedSegment = savedTheme == CSSTheme.github.rawValue ? 0 : 1
         themeRow.addArrangedSubview(themeSegment)
         stack.addArrangedSubview(themeRow)
 
-        // Default viewer row
-        let defaultRow = makeRow(label: "Default .md viewer:")
+        stack.addArrangedSubview(makeSeparator())
+
+        // -- Shortcut section --
+        stack.addArrangedSubview(makeSectionHeader("Shortcut"))
+        stack.setCustomSpacing(6, after: stack.arrangedSubviews.last!)
+
+        let hotkeyRow = makeFormRow(label: "Toggle Preview")
+        hotkeyLabel = NSTextField(labelWithString: hotkeyManager?.displayString ?? "\u{2325}\u{2318}P")
+        hotkeyLabel.font = .monospacedSystemFont(ofSize: 12, weight: .medium)
+        hotkeyLabel.textColor = .secondaryLabelColor
+        hotkeyRow.addArrangedSubview(hotkeyLabel)
+        let recordBtn = NSButton(title: "Record\u{2026}", target: self, action: #selector(recordHotkey))
+        recordBtn.bezelStyle = .rounded
+        recordBtn.controlSize = .small
+        recordBtn.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
+        hotkeyRow.addArrangedSubview(recordBtn)
+        stack.addArrangedSubview(hotkeyRow)
+
+        stack.addArrangedSubview(makeSeparator())
+
+        // -- File Handling section --
+        stack.addArrangedSubview(makeSectionHeader("File Handling"))
+        stack.setCustomSpacing(6, after: stack.arrangedSubviews.last!)
+
+        let defaultRow = makeFormRow(label: "Default .md Viewer")
         defaultViewerButton = NSButton(
             title: LaunchServicesRegistrar.isDefaultViewer ? "Remove" : "Set as Default",
             target: self, action: #selector(toggleDefaultViewer))
         defaultViewerButton.bezelStyle = .rounded
+        defaultViewerButton.controlSize = .small
+        defaultViewerButton.font = .systemFont(ofSize: NSFont.smallSystemFontSize)
         defaultRow.addArrangedSubview(defaultViewerButton)
         stack.addArrangedSubview(defaultRow)
 
-        // Quit
-        let quitBtn = NSButton(title: "Quit", target: NSApp, action: #selector(NSApp.terminate(_:)))
-        quitBtn.bezelStyle = .rounded
-        stack.addArrangedSubview(quitBtn)
+        stack.addArrangedSubview(makeSeparator())
+
+        // -- Quit --
+        let quitBtn = NSButton(title: "Quit Fast Markdown Preview", target: NSApp, action: #selector(NSApp.terminate(_:)))
+        quitBtn.isBordered = false
+        quitBtn.contentTintColor = .secondaryLabelColor
+        quitBtn.font = .systemFont(ofSize: 12)
+        let quitWrapper = NSStackView(views: [quitBtn])
+        quitWrapper.alignment = .centerX
+        quitWrapper.translatesAutoresizingMaskIntoConstraints = false
+        let quitContainer = NSView()
+        quitContainer.translatesAutoresizingMaskIntoConstraints = false
+        quitContainer.addSubview(quitWrapper)
+        NSLayoutConstraint.activate([
+            quitWrapper.centerXAnchor.constraint(equalTo: quitContainer.centerXAnchor),
+            quitWrapper.topAnchor.constraint(equalTo: quitContainer.topAnchor, constant: 4),
+            quitWrapper.bottomAnchor.constraint(equalTo: quitContainer.bottomAnchor),
+            quitContainer.widthAnchor.constraint(equalTo: stack.widthAnchor),
+        ])
+        stack.addArrangedSubview(quitContainer)
     }
 
-    private func makeRow(label: String) -> NSStackView {
+    // MARK: - Layout Helpers
+
+    private func makeSectionHeader(_ title: String) -> NSView {
+        let label = NSTextField(labelWithString: title.uppercased())
+        label.font = .systemFont(ofSize: 11, weight: .medium)
+        label.textColor = .tertiaryLabelColor
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        let container = NSView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        return container
+    }
+
+    private func makeFormRow(label: String) -> NSStackView {
         let row = NSStackView()
         row.orientation = .horizontal
+        row.alignment = .firstBaseline
         row.spacing = 8
+        row.edgeInsets = NSEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+
         let lbl = NSTextField(labelWithString: label)
         lbl.font = .systemFont(ofSize: 13)
-        lbl.setContentHuggingPriority(.required, for: .horizontal)
+        lbl.textColor = .labelColor
+        lbl.setContentHuggingPriority(.defaultLow, for: .horizontal)
         row.addArrangedSubview(lbl)
+
+        // Push controls to trailing edge
+        let spacer = NSView()
+        spacer.setContentHuggingPriority(.defaultLow - 1, for: .horizontal)
+        spacer.setContentCompressionResistancePriority(.defaultLow - 1, for: .horizontal)
+        row.addArrangedSubview(spacer)
+
+        row.translatesAutoresizingMaskIntoConstraints = false
         return row
     }
+
+    private func makeSeparator() -> NSView {
+        let separator = NSBox()
+        separator.boxType = .separator
+        separator.translatesAutoresizingMaskIntoConstraints = false
+
+        let container = NSView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(separator)
+        NSLayoutConstraint.activate([
+            separator.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
+            separator.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
+            separator.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
+            separator.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -4),
+        ])
+        return container
+    }
+
+    // MARK: - Actions
 
     @objc private func recordHotkey() {
         let alert = NSAlert()

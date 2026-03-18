@@ -13,13 +13,22 @@ enum CSSTheme: String, CaseIterable {
 }
 
 struct HTMLTemplate {
+    /// Locate a bundle resource, trying the root and then a "Resources" subdirectory
+    /// (folder-reference builds place files one level deeper).
+    private static func bundleURL(forResource name: String, withExtension ext: String) -> URL? {
+        if let url = Bundle.main.url(forResource: name, withExtension: ext) {
+            return url
+        }
+        return Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Resources")
+    }
+
     static func wrap(htmlBody: String, theme: CSSTheme) -> String {
         let cssName = theme.rawValue
-        guard let cssURL = Bundle.main.url(forResource: cssName, withExtension: "css"),
+        guard let cssURL = bundleURL(forResource: cssName, withExtension: "css"),
               let css = try? String(contentsOf: cssURL) else {
             return "<html><body>\(htmlBody)</body></html>"
         }
-        guard let hlURL = Bundle.main.url(forResource: "highlight.min", withExtension: "js"),
+        guard let hlURL = bundleURL(forResource: "highlight.min", withExtension: "js"),
               let hljs = try? String(contentsOf: hlURL) else {
             return wrapWithCSS(css, body: htmlBody)
         }

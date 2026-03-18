@@ -1,56 +1,122 @@
+/*  System Native theme — uses CSS system colors that automatically
+    adapt to the user's macOS light/dark appearance and accent color.  */
+
 :root {
   color-scheme: light dark;
+  --sys-fg: CanvasText;
+  --sys-bg: Canvas;
+  --sys-link: LinkText;
+  --sys-secondary: GrayText;
+  --sys-border: light-dark(rgba(0,0,0,0.12), rgba(255,255,255,0.12));
+  --sys-code-bg: light-dark(rgba(0,0,0,0.05), rgba(255,255,255,0.06));
+  --sys-subtle-bg: light-dark(rgba(0,0,0,0.03), rgba(255,255,255,0.04));
 }
+
 * { box-sizing: border-box; }
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font: -apple-system-body;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   font-size: 14px;
-  line-height: 1.5;
-  color: -apple-system-label;
-  background: -apple-system-control-background;
+  line-height: 1.6;
+  color: var(--sys-fg);
+  background: var(--sys-bg);
   max-width: 800px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 24px 32px;
+  -webkit-font-smoothing: antialiased;
 }
-h1 { font-size: 1.8em; }
+
+/* Headings — no bottom borders, just weight + spacing */
+h1 { font-size: 1.75em; letter-spacing: -0.01em; }
 h2 { font-size: 1.4em; }
-h3 { font-size: 1.2em; }
-h1, h2, h3 { font-weight: 700; margin-top: 20px; margin-bottom: 10px; }
-a { color: -apple-system-blue; }
+h3 { font-size: 1.15em; }
+h1, h2, h3 {
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--sys-fg);
+}
+
+a {
+  color: var(--sys-link);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* Inline code */
 code {
   font-family: "SF Mono", ui-monospace, Menlo, monospace;
-  font-size: 13px;
-  background: rgba(0,0,0,0.06);
+  font-size: 0.9em;
+  background: var(--sys-code-bg);
   border-radius: 4px;
-  padding: 2px 5px;
+  padding: 0.15em 0.35em;
 }
-@media (prefers-color-scheme: dark) {
-  code { background: rgba(255,255,255,0.1); }
-}
+
+/* Code blocks */
 pre {
-  background: rgba(0,0,0,0.05);
+  background: var(--sys-code-bg);
+  border: 1px solid var(--sys-border);
   border-radius: 8px;
-  padding: 12px;
+  padding: 14px 16px;
   overflow: auto;
+  line-height: 1.5;
 }
-@media (prefers-color-scheme: dark) {
-  pre { background: rgba(255,255,255,0.07); }
+pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.85em;
 }
-pre code { background: transparent; padding: 0; }
-blockquote { border-left: 3px solid rgba(0,0,0,0.2); padding-left: 12px; margin-left: 0; color: rgba(0,0,0,0.6); }
+
+/* Blockquotes */
+blockquote {
+  border-left: 3px solid var(--sys-border);
+  padding-left: 14px;
+  margin: 1em 0;
+  margin-left: 0;
+  color: var(--sys-secondary);
+}
+
+/* Tables */
 table { border-collapse: collapse; width: 100%; }
-th, td { padding: 6px 12px; border: 1px solid rgba(0,0,0,0.15); }
-img { max-width: 100%; }
+th, td {
+  padding: 8px 12px;
+  border: 1px solid var(--sys-border);
+  text-align: left;
+}
+th {
+  font-weight: 600;
+  background: var(--sys-subtle-bg);
+}
+tr:nth-child(even) { background: var(--sys-subtle-bg); }
+
+/* Images */
+img { max-width: 100%; border-radius: 4px; }
+
+/* Horizontal rules */
+hr {
+  border: none;
+  border-top: 1px solid var(--sys-border);
+  margin: 1.5em 0;
+}
+
+/* Task lists */
+.contains-task-list { list-style-type: none; padding-left: 0; }
+.task-list-item { display: flex; align-items: baseline; gap: 8px; }
+.task-list-item input[type="checkbox"] { margin: 0; }
+
+/* Strikethrough */
+del { color: var(--sys-secondary); }
+
+/* File-gone banner */
 #file-gone-banner {
   display: none;
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  color: #664d03;
+  background: light-dark(#fff3cd, #332701);
+  border: 1px solid light-dark(#ffc107, #9a6700);
+  color: light-dark(#664d03, #e3b341);
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 8px;
   margin-bottom: 16px;
   font-size: 13px;
-}
-@media (prefers-color-scheme: dark) {
-  #file-gone-banner { background: #332701; border-color: #9a6700; color: #e3b341; }
 }

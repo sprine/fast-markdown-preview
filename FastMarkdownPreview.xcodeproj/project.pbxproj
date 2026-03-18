@@ -18,15 +18,20 @@
 		88EEE14D8F565089652A1DDE /* FileWatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7BDAFDDDA5C162EC54C4A0 /* FileWatcherTests.swift */; };
 		8CCAFF11AA4F8B4FD1FBA8D2 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192C2DE3F6CE039E48822C0A /* WebViewController.swift */; };
 		9889A65BF1A81A12E8019921 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E574217A3EA689A0E798477A /* FileWatcher.swift */; };
+		A0FE9B5B77D5AE197F9D6635 /* github.css in Resources */ = {isa = PBXBuildFile; fileRef = 028184423C78B626E37945AF /* github.css */; };
 		A1309BF0086A3178B7BE14F2 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A355C387BE759ED76519587 /* MarkdownRenderer.swift */; };
+		AEB6106292A3D30030068324 /* system.css in Resources */ = {isa = PBXBuildFile; fileRef = 0600E203137AACA0BDB97D95 /* system.css */; };
+		B0ECD383B112186C12F4B7C5 /* highlight.min.js in Resources */ = {isa = PBXBuildFile; fileRef = E8CDD09229B2ED92221277C5 /* highlight.min.js */; };
 		B89EA033501C6D23B5EF4A05 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F380F4991DA845FE890CD1CD /* Carbon.framework */; };
 		BBB63FB1D6214800B9A31DD7 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC9C9C1F72C304F5AB5C235 /* HotkeyManager.swift */; };
+		C0F840C0724253F752FB7FE5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C790C43C6082F40BEFD69355 /* main.swift */; };
 		C61ED513DA7C4A4D40259196 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E574217A3EA689A0E798477A /* FileWatcher.swift */; };
-		D1A2B3C4E5F607182930A050 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B3C4D5F60718293A4B5C6D /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		020C17196F540A3B65F81BDD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		028184423C78B626E37945AF /* github.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = github.css; sourceTree = "<group>"; };
+		0600E203137AACA0BDB97D95 /* system.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = system.css; sourceTree = "<group>"; };
 		0CC9C9C1F72C304F5AB5C235 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 		192C2DE3F6CE039E48822C0A /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		19796255ABCE389F2F4CA32E /* LaunchServicesRegistrar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchServicesRegistrar.swift; sourceTree = "<group>"; };
@@ -41,8 +46,9 @@
 		A7E923D3C5FBF0D33842A7AE /* FastMarkdownPreviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FastMarkdownPreviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD933B2C3FC3BFEDC8142B66 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		BF7BDAFDDDA5C162EC54C4A0 /* FileWatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcherTests.swift; sourceTree = "<group>"; };
+		C790C43C6082F40BEFD69355 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		E574217A3EA689A0E798477A /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
-		E2B3C4D5F60718293A4B5C6D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		E8CDD09229B2ED92221277C5 /* highlight.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = highlight.min.js; sourceTree = "<group>"; };
 		F380F4991DA845FE890CD1CD /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Carbon.framework; sourceTree = "<group>"; };
 		F5793209F19273FBFE04AB3A /* HTMLTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLTemplate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,7 +94,7 @@
 				F5793209F19273FBFE04AB3A /* HTMLTemplate.swift */,
 				020C17196F540A3B65F81BDD /* Info.plist */,
 				19796255ABCE389F2F4CA32E /* LaunchServicesRegistrar.swift */,
-				E2B3C4D5F60718293A4B5C6D /* main.swift */,
+				C790C43C6082F40BEFD69355 /* main.swift */,
 				1A355C387BE759ED76519587 /* MarkdownRenderer.swift */,
 				8779124166686E4D6ED70635 /* PanelController.swift */,
 				AD933B2C3FC3BFEDC8142B66 /* SettingsViewController.swift */,
@@ -105,9 +111,20 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		9793183F63B37D33507A8977 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				028184423C78B626E37945AF /* github.css */,
+				E8CDD09229B2ED92221277C5 /* highlight.min.js */,
+				0600E203137AACA0BDB97D95 /* system.css */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		B06BC367ACA7E8202E004824 = {
 			isa = PBXGroup;
 			children = (
+				9793183F63B37D33507A8977 /* Resources */,
 				EBD2A2DFFA9539862D50AD44 /* Sources */,
 				48426FFED79E4F41511C0BB4 /* Tests */,
 				031E3A35BF30CF9FFEA0990A /* Frameworks */,
@@ -140,6 +157,7 @@
 			buildConfigurationList = 50847140D3CA2B9313CE027D /* Build configuration list for PBXNativeTarget "FastMarkdownPreview" */;
 			buildPhases = (
 				8D21BA0DAA968DD31494FC55 /* Sources */,
+				D0A45B44BA06E9B205570704 /* Resources */,
 				7104D7B3BC88111EF6F98555 /* Frameworks */,
 			);
 			buildRules = (
@@ -209,6 +227,19 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		D0A45B44BA06E9B205570704 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0FE9B5B77D5AE197F9D6635 /* github.css in Resources */,
+				B0ECD383B112186C12F4B7C5 /* highlight.min.js in Resources */,
+				AEB6106292A3D30030068324 /* system.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8D21BA0DAA968DD31494FC55 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -216,7 +247,6 @@
 			files = (
 				5764FDE2F4968B3D2A690A57 /* AppDelegate.swift in Sources */,
 				9889A65BF1A81A12E8019921 /* FileWatcher.swift in Sources */,
-				D1A2B3C4E5F607182930A050 /* main.swift in Sources */,
 				0F1B39CF4E66FCEF39A55D91 /* FinderBridge.swift in Sources */,
 				80B8F04F5F2410373FE6AF21 /* HTMLTemplate.swift in Sources */,
 				BBB63FB1D6214800B9A31DD7 /* HotkeyManager.swift in Sources */,
@@ -225,6 +255,7 @@
 				354D7432E46F557AAB51B4AA /* PanelController.swift in Sources */,
 				83790C95A488C6FDF5626297 /* SettingsViewController.swift in Sources */,
 				8CCAFF11AA4F8B4FD1FBA8D2 /* WebViewController.swift in Sources */,
+				C0F840C0724253F752FB7FE5 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
