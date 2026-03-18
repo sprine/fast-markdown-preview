@@ -22,7 +22,7 @@ final class SettingsViewController: NSViewController {
     private func buildUI() {
         let stack = NSStackView()
         stack.orientation = .vertical
-        stack.alignment = .leading
+        stack.alignment = .fill
         stack.spacing = 0
         stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
@@ -101,7 +101,6 @@ final class SettingsViewController: NSViewController {
             quitWrapper.bottomAnchor.constraint(equalTo: quitContainer.bottomAnchor),
         ])
         stack.addArrangedSubview(quitContainer)
-        quitContainer.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
     }
 
     // MARK: - Layout Helpers
