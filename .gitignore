@@ -4,3 +4,5 @@
 *.xcworkspace
 build/
 .build/
+Libs/cmark-gfm/lib/
+Libs/cmark-gfm/include/
