@@ -1,37 +1,41 @@
 import AppKit
 
-/// Prevents NSDocumentController from trying to create NSDocument instances
-/// for file-open events. Instead, forwards opens to the app delegate.
-class DocumentController: NSDocumentController {
-    override func openDocument(withContentsOf url: URL,
-                               display displayDocument: Bool,
-                               completionHandler: @escaping (NSDocument?, Bool, (any Error)?) -> Void) {
-        NSLog("[FMP] DocumentController.openDocument called for: %@", url.path)
-        if let delegate = NSApp.delegate as? AppDelegate {
-            delegate.panelController.open(fileAt: url)
-        }
-        completionHandler(nil, false, nil)
-    }
-
-    override func documentClass(forType typeName: String) -> AnyClass? {
-        NSLog("[FMP] documentClass(forType: %@) → nil", typeName)
-        return nil
-    }
-}
-
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
     private(set) var panelController: PanelController!
     private var hotkeyManager: HotkeyManager!
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    func applicationWillFinishLaunching(_ notification: Notification) {
         panelController = PanelController()
+
+        // Intercept kAEOpenDocuments before NSDocumentController can handle it.
+        // This prevents the "cannot open files" error for non-document-based apps.
+        NSAppleEventManager.shared().setEventHandler(
+            self,
+            andSelector: #selector(handleOpenDocuments(_:withReply:)),
+            forEventClass: AEEventClass(kCoreEventClass),
+            andEventID: AEEventID(kAEOpenDocuments)
+        )
+    }
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
         setupMenuBar()
         hotkeyManager = HotkeyManager { [weak self] in
             self?.handleHotkey()
         }
         setupPopover()
+    }
+
+    @objc private func handleOpenDocuments(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+        guard let listDesc = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) else { return }
+        for i in 1...listDesc.numberOfItems {
+            guard let itemDesc = listDesc.atIndex(i),
+                  let urlString = itemDesc.stringValue,
+                  let url = URL(string: urlString),
+                  ["md", "markdown"].contains(url.pathExtension.lowercased()) else { continue }
+            panelController.open(fileAt: url)
+        }
     }
 
     private func setupMenuBar() {
@@ -42,7 +46,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             img.isTemplate = true
             button.image = img
         } else {
-            // SF Symbol unavailable – fall back to text
             button.title = "MD"
         }
         button.action = #selector(togglePopover(_:))
