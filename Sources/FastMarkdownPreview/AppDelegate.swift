@@ -24,13 +24,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func handleOpenDocuments(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
-        guard let listDesc = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) else { return }
+        NSLog("[FMP] handleOpenDocuments Apple Event fired")
+        guard let listDesc = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) else {
+            NSLog("[FMP] handleOpenDocuments — no direct object in event")
+            return
+        }
+        NSLog("[FMP] handleOpenDocuments — %d items in list", listDesc.numberOfItems)
         for i in 1...listDesc.numberOfItems {
-            guard let itemDesc = listDesc.atIndex(i),
-                  let coerced = itemDesc.coerce(toDescriptorType: typeFileURL),
-                  let urlString = String(data: coerced.data, encoding: .utf8),
-                  let url = URL(string: urlString)
-            else { continue }
+            guard let itemDesc = listDesc.atIndex(i) else {
+                NSLog("[FMP] handleOpenDocuments — item %d is nil", i)
+                continue
+            }
+            NSLog("[FMP] handleOpenDocuments — item %d descriptorType: %u, stringValue: %@",
+                  i, itemDesc.descriptorType, itemDesc.stringValue ?? "(nil)")
+            guard let coerced = itemDesc.coerce(toDescriptorType: typeFileURL) else {
+                NSLog("[FMP] handleOpenDocuments — coerce to typeFileURL failed for item %d", i)
+                continue
+            }
+            let urlString = String(data: coerced.data, encoding: .utf8) ?? "(nil)"
+            NSLog("[FMP] handleOpenDocuments — coerced URL string: %@", urlString)
+            guard let url = URL(string: urlString) else {
+                NSLog("[FMP] handleOpenDocuments — URL(string:) failed for: %@", urlString)
+                continue
+            }
+            NSLog("[FMP] handleOpenDocuments — opening: %@", url.path)
             panelController.open(fileAt: url)
         }
     }
@@ -81,6 +98,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
+        NSLog("[FMP] application(_:open:) called with %d URLs: %@", urls.count, urls.map(\.path).joined(separator: ", "))
         guard let url = urls.first(where: { $0.pathExtension.lowercased() == "md" }) else { return }
         panelController.open(fileAt: url)
     }

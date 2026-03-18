@@ -2,8 +2,12 @@ import AppKit
 
 // Install our custom DocumentController before NSApplication.shared
 // so it becomes the shared instance and prevents "cannot open files" alerts.
-let _ = DocumentController()
+let dc = DocumentController()
+NSLog("[FMP] main.swift — DocumentController created: %@", dc)
 let app = NSApplication.shared
+NSLog("[FMP] main.swift — NSDocumentController.shared type: %@, is ours: %d",
+      String(describing: type(of: NSDocumentController.shared)),
+      NSDocumentController.shared is DocumentController)
 let delegate = AppDelegate()
 app.delegate = delegate
 
