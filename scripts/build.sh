@@ -5,6 +5,7 @@ set -euo pipefail
 # Usage: ./scripts/build.sh [--debug] [--test] [--no-install] [--xcode]
 #
 # By default: builds Release, installs to ~/Applications, and launches.
+# Automatically rebuilds cmark-gfm from Homebrew if needed.
 #
 # Options:
 #   --debug        Build Debug instead of Release
@@ -40,6 +41,36 @@ check_dep() {
 
 check_dep xcodegen "brew install xcodegen"
 check_dep xcodebuild "xcode-select --install"
+
+# ── Rebuild vendored cmark-gfm from Homebrew ────────────────────────
+# The vendored .a files may have been built on a different macOS version.
+# Rebuild from Homebrew to match this machine's SDK.
+refresh_cmark_gfm() {
+  if ! brew list cmark-gfm &>/dev/null; then
+    echo "==> Installing cmark-gfm via Homebrew..."
+    brew install cmark-gfm
+  fi
+
+  local prefix
+  prefix="$(brew --prefix cmark-gfm)"
+
+  echo "==> Refreshing vendored cmark-gfm from $prefix..."
+  mkdir -p "$ROOT/Libs/cmark-gfm/include" "$ROOT/Libs/cmark-gfm/lib"
+
+  # Copy headers
+  cp -f "$prefix"/include/*.h "$ROOT/Libs/cmark-gfm/include/"
+
+  # Copy static libraries
+  cp -f "$prefix"/lib/libcmark-gfm.a "$ROOT/Libs/cmark-gfm/lib/"
+  cp -f "$prefix"/lib/libcmark-gfm-extensions.a "$ROOT/Libs/cmark-gfm/lib/"
+
+  echo "==> cmark-gfm refreshed ($(lipo -info "$ROOT/Libs/cmark-gfm/lib/libcmark-gfm.a" 2>&1 | awk -F: '{print $NF}'))"
+}
+
+# Check if vendored libs match this machine's macOS version.
+# The linker warns when .a files are built for a newer OS than the target.
+# Safest: always rebuild from Homebrew — it's fast (<1s, just copying).
+refresh_cmark_gfm
 
 # ── Code signing ─────────────────────────────────────────────────────
 # Use a real signing identity if available, fall back to ad-hoc.
