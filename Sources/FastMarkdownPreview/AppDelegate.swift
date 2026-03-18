@@ -1,6 +1,5 @@
 import AppKit
 
-@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
