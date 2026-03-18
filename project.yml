@@ -10,8 +10,9 @@ settings:
   base:
     MACOSX_DEPLOYMENT_TARGET: "14.0"
     SWIFT_VERSION: "5.9"
-    CODE_SIGN_IDENTITY: "-"
-    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "Apple Development"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
 
 targets:
   FastMarkdownPreview:
@@ -31,6 +32,7 @@ targets:
         CFBundleIdentifier: com.anshu.FastMarkdownPreview
         CFBundleVersion: "1"
         CFBundleShortVersionString: "1.0"
+        NSPrincipalClass: NSApplication
         LSUIElement: true
         NSHighResolutionCapable: true
         NSAppleEventsUsageDescription: "Used to read the selected file in Finder."

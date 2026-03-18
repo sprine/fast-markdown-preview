@@ -41,6 +41,25 @@ check_dep() {
 check_dep xcodegen "brew install xcodegen"
 check_dep xcodebuild "xcode-select --install"
 
+# ── Code signing ─────────────────────────────────────────────────────
+# Use a real signing identity if available, fall back to ad-hoc.
+# macOS 26+ (Tahoe) kills ad-hoc signed apps — "Sign to Run Locally"
+# via Xcode or a Developer ID is required.
+SIGN_IDENTITY=$(security find-identity -v -p codesigning 2>/dev/null \
+  | grep -o '"[^"]*"' | head -1 | tr -d '"' || true)
+
+if [ -z "$SIGN_IDENTITY" ]; then
+  echo "WARNING: No signing identity found. Using ad-hoc signing."
+  echo "         On macOS 26+, the app may be killed on launch."
+  echo "         Fix: open Xcode once to create a local signing certificate,"
+  echo "         or use ./scripts/build.sh --xcode and build from Xcode (Cmd+R)."
+  SIGN_IDENTITY="-"
+  SIGN_STYLE="Manual"
+else
+  echo "==> Signing with: $SIGN_IDENTITY"
+  SIGN_STYLE="Manual"
+fi
+
 # ── Generate Xcode project ──────────────────────────────────────────
 echo "==> Generating Xcode project from project.yml..."
 xcodegen generate --spec project.yml --project .
@@ -48,6 +67,8 @@ xcodegen generate --spec project.yml --project .
 # ── Open in Xcode ───────────────────────────────────────────────────
 if $OPEN_XCODE; then
   echo "==> Opening in Xcode..."
+  echo "    In Xcode: select FastMarkdownPreview scheme, set Signing to"
+  echo "    'Sign to Run Locally', then Cmd+R to build and run."
   open FastMarkdownPreview.xcodeproj
   exit 0
 fi
@@ -59,8 +80,7 @@ if $RUN_TESTS; then
     -project FastMarkdownPreview.xcodeproj \
     -scheme FastMarkdownPreview \
     -destination "platform=macOS" \
-    CODE_SIGN_IDENTITY="-" \
-    CODE_SIGNING_REQUIRED=NO \
+    CODE_SIGN_IDENTITY="$SIGN_IDENTITY" \
     ARCHS=arm64 \
     2>&1 | grep -E "Test Case|PASSED|FAILED|BUILD|error:" || true
   exit 0
@@ -77,8 +97,8 @@ if [ "$CONFIG" = "Release" ]; then
     -configuration Release \
     -archivePath "$ROOT/build/FastMarkdownPreview.xcarchive" \
     archive \
-    CODE_SIGN_IDENTITY="-" \
-    CODE_SIGNING_REQUIRED=NO \
+    CODE_SIGN_IDENTITY="$SIGN_IDENTITY" \
+    CODE_SIGN_STYLE="$SIGN_STYLE" \
     ARCHS=arm64 \
     ONLY_ACTIVE_ARCH=YES \
     -derivedDataPath "$DERIVED" \
@@ -92,8 +112,8 @@ else
     -scheme FastMarkdownPreview \
     -configuration Debug \
     build \
-    CODE_SIGN_IDENTITY="-" \
-    CODE_SIGNING_REQUIRED=NO \
+    CODE_SIGN_IDENTITY="$SIGN_IDENTITY" \
+    CODE_SIGN_STYLE="$SIGN_STYLE" \
     ARCHS=arm64 \
     -derivedDataPath "$DERIVED" \
     2>&1 | tail -3
@@ -114,11 +134,11 @@ if $INSTALL; then
   mkdir -p ~/Applications
   rm -rf ~/Applications/FastMarkdownPreview.app
   cp -R "$APP_PATH" ~/Applications/
-  echo "==> Installed to ~/Applications/FastMarkdownPreview.app"
 
-  # Clear quarantine so Gatekeeper doesn't block the ad-hoc signed app
+  # Clear quarantine attribute
   xattr -cr ~/Applications/FastMarkdownPreview.app 2>/dev/null || true
 
+  echo "==> Installed to ~/Applications/FastMarkdownPreview.app"
   echo "==> Launching..."
   open ~/Applications/FastMarkdownPreview.app
 fi
