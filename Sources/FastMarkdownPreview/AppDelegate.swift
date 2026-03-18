@@ -6,8 +6,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private(set) var panelController: PanelController!
     private var hotkeyManager: HotkeyManager!
 
-    func applicationWillFinishLaunching(_ notification: Notification) {
+    override init() {
         panelController = PanelController()
+        super.init()
+    }
+
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // Register our own kAEOpenDocuments handler to completely bypass
+        // NSDocumentController, which shows "cannot open files" errors
+        // for non-document-based apps.
+        NSAppleEventManager.shared().setEventHandler(
+            self,
+            andSelector: #selector(handleOpenDocuments(_:withReply:)),
+            forEventClass: AEEventClass(kCoreEventClass),
+            andEventID: AEEventID(kAEOpenDocuments)
+        )
+    }
+
+    @objc func handleOpenDocuments(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
+        guard let listDesc = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject)) else { return }
+        for i in 1...listDesc.numberOfItems {
+            guard let itemDesc = listDesc.atIndex(i),
+                  let coerced = itemDesc.coerce(toDescriptorType: typeFileURL),
+                  let urlString = String(data: coerced.data, encoding: .utf8),
+                  let url = URL(string: urlString)
+            else { continue }
+            panelController.open(fileAt: url)
+        }
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
