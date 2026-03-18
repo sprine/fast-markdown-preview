@@ -16,6 +16,7 @@ final class WebViewController: NSViewController {
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
+        webView.setValue(false, forKey: "drawsBackground")
         view = webView
     }
 

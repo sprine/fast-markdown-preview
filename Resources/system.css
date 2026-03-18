@@ -14,16 +14,17 @@
 
 * { box-sizing: border-box; }
 
+html, body { background: transparent; }
 body {
   font: -apple-system-body;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.6;
   color: var(--sys-fg);
-  background: var(--sys-bg);
   max-width: 800px;
   margin: 0 auto;
   padding: 24px 32px;
+  padding-top: 44px;
   -webkit-font-smoothing: antialiased;
 }
 

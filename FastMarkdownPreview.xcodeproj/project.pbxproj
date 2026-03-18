@@ -20,6 +20,7 @@
 		9889A65BF1A81A12E8019921 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E574217A3EA689A0E798477A /* FileWatcher.swift */; };
 		A0FE9B5B77D5AE197F9D6635 /* github.css in Resources */ = {isa = PBXBuildFile; fileRef = 028184423C78B626E37945AF /* github.css */; };
 		A1309BF0086A3178B7BE14F2 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A355C387BE759ED76519587 /* MarkdownRenderer.swift */; };
+		A670932A5D7CD940C624427B /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0F4F4405C6AC986EBDF8BA /* DocumentController.swift */; };
 		AEB6106292A3D30030068324 /* system.css in Resources */ = {isa = PBXBuildFile; fileRef = 0600E203137AACA0BDB97D95 /* system.css */; };
 		B0ECD383B112186C12F4B7C5 /* highlight.min.js in Resources */ = {isa = PBXBuildFile; fileRef = E8CDD09229B2ED92221277C5 /* highlight.min.js */; };
 		B89EA033501C6D23B5EF4A05 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F380F4991DA845FE890CD1CD /* Carbon.framework */; };
@@ -40,6 +41,7 @@
 		4C0E4A5D7AFB6F21E77AB383 /* FinderBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderBridge.swift; sourceTree = "<group>"; };
 		5130F850B27EFA099047C658 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		555636E248D73F3FD3057197 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		5B0F4F4405C6AC986EBDF8BA /* DocumentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentController.swift; sourceTree = "<group>"; };
 		5EFB0AEB8A8F6B84B319806C /* FastMarkdownPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FastMarkdownPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8779124166686E4D6ED70635 /* PanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelController.swift; sourceTree = "<group>"; };
 		8FEE541FBD6A1D7BDCF700F8 /* FastMarkdownPreview-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FastMarkdownPreview-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				5130F850B27EFA099047C658 /* AppDelegate.swift */,
+				5B0F4F4405C6AC986EBDF8BA /* DocumentController.swift */,
 				8FEE541FBD6A1D7BDCF700F8 /* FastMarkdownPreview-Bridging-Header.h */,
 				E574217A3EA689A0E798477A /* FileWatcher.swift */,
 				4C0E4A5D7AFB6F21E77AB383 /* FinderBridge.swift */,
@@ -246,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5764FDE2F4968B3D2A690A57 /* AppDelegate.swift in Sources */,
+				A670932A5D7CD940C624427B /* DocumentController.swift in Sources */,
 				9889A65BF1A81A12E8019921 /* FileWatcher.swift in Sources */,
 				0F1B39CF4E66FCEF39A55D91 /* FinderBridge.swift in Sources */,
 				80B8F04F5F2410373FE6AF21 /* HTMLTemplate.swift in Sources */,

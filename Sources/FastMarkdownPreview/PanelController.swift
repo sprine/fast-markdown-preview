@@ -15,13 +15,23 @@ final class PanelController: NSObject {
         let frame = savedFrame()
         panel = NSPanel(
             contentRect: frame,
-            styleMask: [.titled, .closable, .resizable, .nonactivatingPanel],
+            styleMask: [.titled, .closable, .resizable, .nonactivatingPanel,
+                        .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
         panel.level = .floating
         panel.isReleasedWhenClosed = false
         panel.delegate = self
+        panel.titlebarAppearsTransparent = true
+        panel.titleVisibility = .hidden
+        panel.isMovableByWindowBackground = true
+
+        // Visual effect view for glass/vibrancy background
+        let visualEffect = NSVisualEffectView(frame: .zero)
+        visualEffect.material = .sidebar
+        visualEffect.blendingMode = .behindWindow
+        visualEffect.state = .followsWindowActiveState
 
         // Use DroppableView as content view
         let dropView = DroppableView(frame: .zero)
@@ -31,7 +41,17 @@ final class PanelController: NSObject {
         }
         panel.contentView = dropView
 
-        // Embed webVC view manually (not via contentViewController to avoid conflict)
+        // Add visual effect view behind everything
+        dropView.addSubview(visualEffect)
+        visualEffect.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            visualEffect.topAnchor.constraint(equalTo: dropView.topAnchor),
+            visualEffect.bottomAnchor.constraint(equalTo: dropView.bottomAnchor),
+            visualEffect.leadingAnchor.constraint(equalTo: dropView.leadingAnchor),
+            visualEffect.trailingAnchor.constraint(equalTo: dropView.trailingAnchor),
+        ])
+
+        // Embed webVC view on top of the visual effect
         let webViewContainer = webVC.view
         dropView.addSubview(webViewContainer)
         webViewContainer.translatesAutoresizingMaskIntoConstraints = false
